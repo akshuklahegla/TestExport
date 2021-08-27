@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security;
-using System.Web;
 using System.Web.Http.Description;
 using System.Web.Http;
-using System.Web.Mvc.Ajax;
 using Aspose.Cells;
 using Aspose.Cells.Utility;
 using Microsoft.SharePoint.Client;
@@ -30,7 +26,6 @@ namespace TestExport.Controllers
         private string siteUrl = "https://heglagroup.sharepoint.com/sites/hegla_documents";
         private string password = "Boj46040";
         private string userName = "ashish.shukla@hegla.de";
-        private string p = "test.csv";
 
         /// <summary>
         /// Resturns string
@@ -53,7 +48,7 @@ namespace TestExport.Controllers
         [ResponseType(typeof(String))]
         [HttpPost]
         [Route("uploadFile")]
-        public string uploadFile(Model model)
+        public string uploadFile(Model model, String path)
         {
 
             Workbook workbook = new Workbook();
@@ -81,7 +76,8 @@ namespace TestExport.Controllers
             Web site = context.Web;
 
             //Get the required RootFolder
-            string barRootFolderRelativeUrl = "Shared Documents/ExportExcel";
+            //string barRootFolderRelativeUrl = "Shared Documents/ExportExcel";
+            string barRootFolderRelativeUrl = path;
             Folder barFolder = site.GetFolderByServerRelativeUrl(barRootFolderRelativeUrl);
 
             //Add file to new Folder
@@ -92,7 +88,7 @@ namespace TestExport.Controllers
             context.ExecuteQuery();
 
             //Return the URL of the new uploaded file
-            string newUrl = siteUrl + barRootFolderRelativeUrl + "/" + Path.GetFileName(excelfile);
+            string newUrl = siteUrl + "/" + barRootFolderRelativeUrl + "/" + Path.GetFileName(excelfile);
 
             return newUrl;
         }
